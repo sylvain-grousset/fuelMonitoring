@@ -27,7 +27,7 @@ public class Stats {
     }
 
     public void makeStats() throws SQLException{
-    	//Database db = Database.getInstance();
+    	Database db = Database.getInstance();
     	
     	float moyenneGazole = this.gazole/this.iterationGazole;
     	float moyenne98 = this.SP98/this.iterationSP98;
@@ -36,7 +36,7 @@ public class Stats {
     	
     	LocalDate now = LocalDate.now();
     	
-    	//db.insert(now, round(moyenne98), round(moyenneE85), round(moyenneGazole));
+    	db.insert(now, round(moyenne98), round(moyenneE85), round(moyenneGazole));
     	
         System.out.println("Moyenne des prix du gazole :"+round(moyenneGazole));
         System.out.println("Moyenne des prix du SP98 :"+round(moyenne98));
