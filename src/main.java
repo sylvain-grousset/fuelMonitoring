@@ -43,7 +43,7 @@ public class main {
     }
     
     /**
-     * @Description Vérifie si le fichier à une date donnée est disponible par l'API.
+     * Vérifie si le fichier à une date donnée est disponible par l'API.
      * @param date
      * @return boolean
      * @throws IOException
