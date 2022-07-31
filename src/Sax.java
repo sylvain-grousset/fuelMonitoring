@@ -5,7 +5,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class Sax extends DefaultHandler{
 
-    //private Stats stat = new Stats();
+    private Stats stat = new Stats();
 
     private int iteration = 0;
     private boolean isVille = false;
@@ -21,7 +21,7 @@ public class Sax extends DefaultHandler{
 
     public void endDocument(){
         try {
-			//stat.makeStats();
+			stat.makeStats();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,13 +36,13 @@ public class Sax extends DefaultHandler{
     	}*/
         if (name.compareTo("prix") == 0){
             if(atts.getValue("nom").compareTo("Gazole") == 0){
-                //this.stat.setGazole(Float.valueOf(atts.getValue("valeur")));
+                this.stat.setGazole(Float.valueOf(atts.getValue("valeur")));
             }
             if(atts.getValue("nom").compareTo("SP98") == 0){
-                //this.stat.setSP98(Float.valueOf(atts.getValue("valeur")));
+                this.stat.setSP98(Float.valueOf(atts.getValue("valeur")));
             }
             if(atts.getValue("nom").compareTo("E85") == 0){
-                //this.stat.setE85(Float.valueOf(atts.getValue("valeur")));
+                this.stat.setE85(Float.valueOf(atts.getValue("valeur")));
             }
             //System.out.println("Balise ouvrante :" + qName);
         }
