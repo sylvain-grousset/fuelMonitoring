@@ -30,7 +30,7 @@ public class main {
      	if (checkFile(formattedDate2) == true ){
      		UnzipUtility unzipper = new UnzipUtility();
             try {
-                unzipper.unzip(formattedDate2+".zip", "histoFichiers/");
+                unzipper.unzip("histoFichiers/"+formattedDate2+".zip", "histoFichiers/");
                 XMLReader xr = XMLReaderFactory.createXMLReader();
                 Sax sax = new Sax();
                 xr.setContentHandler(sax);
@@ -42,10 +42,16 @@ public class main {
      	}
     }
     
+    /**
+     * @Description Vérifie si le fichier à une date donnée est disponible par l'API.
+     * @param date
+     * @return boolean
+     * @throws IOException
+     */
     private static boolean checkFile(String date) throws IOException {
     	URL website = new URL("https://donnees.roulez-eco.fr/opendata/jour/"+date);
      	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-     	FileOutputStream fos = new FileOutputStream(date+".zip");
+     	FileOutputStream fos = new FileOutputStream("histoFichiers/"+date+".zip");
      	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
      	
      	HttpURLConnection conn = (HttpURLConnection)website.openConnection();
