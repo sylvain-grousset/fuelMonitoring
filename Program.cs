@@ -36,8 +36,9 @@ namespace Fuel
 
         static void Main()
         {
+            DateTime dateToGet = DateTime.Now.AddDays(-1);
 
-            ZipFetcher zipFetcher = new ZipFetcher();
+            ZipFetcher zipFetcher = new ZipFetcher(dateToGet);
             Results resultat = new Results();
 
             IEnumerable<Datas> grandChildData =
@@ -49,14 +50,13 @@ namespace Fuel
 
             foreach (Datas data in grandChildData)
             {
-
                 foreach (Prix p in data.lesPrix)
                 {
                     resultat.addValues(p.Nom, Convert.ToDouble(p.Valeur, CultureInfo.InvariantCulture));
                 }
             }
 
-            resultat.GetAverage();
+            resultat.GetAverage(dateToGet);
         }
     }
 }

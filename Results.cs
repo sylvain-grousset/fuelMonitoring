@@ -47,14 +47,37 @@ namespace Fuel
             }
         }
 
-        public void GetAverage()
+        public void GetAverage(DateTime date)
         {
-            List<Histo> lesNouveauxHisto = new List<Histo>();
-            foreach(var nom in this.mesValeurs.Keys)
-            {
-                Console.WriteLine(nom +" : "+this.mesValeurs[nom].Average);
 
+            Histo unHisto = new Histo();
+
+            foreach(string nom in this.mesValeurs.Keys)
+            {
+                switch (nom)
+                {
+                    case "Gazole":
+                        unHisto.Gazole = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
+                        break;
+
+                    case "SP95":
+                        unHisto.Sp95 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
+                        break;
+
+                    case "SP98":
+                        unHisto.Sp98 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
+                        break;
+
+                    case "E85":
+                        unHisto.E85 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
+                        break;
+                }
             }
+
+            unHisto.Date = DateOnly.FromDateTime(date);
+
+            _context.Histos.Add(unHisto);
+            _context.SaveChanges();
         }
     }
 

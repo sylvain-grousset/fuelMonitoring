@@ -19,16 +19,6 @@ namespace Fuel
         private CarburantContext _context = new CarburantContext();
 
         /// <summary>
-        ///     Constructeur de base pour récupérer un zip pour J-1.
-        /// </summary>
-        public ZipFetcher()
-        {
-            checkExisting(DateTime.Now);
-            FetchZip();
-            Unzip();
-        }
-
-        /// <summary>
         ///     Constructeur utilisé pour récupérer un zip pour une date donnée.
         /// </summary>
         /// <param name="zipDate"></param>
@@ -51,6 +41,7 @@ namespace Fuel
             if (this._context.Histos.Any(t => t.Date == DateOnly.FromDateTime(zipDate)))
             {
                 throw new InvalidOperationException("Une valeur est déjà présente à la date du "+ zipDate.ToString());
+                Environment.Exit(1);
             }
         }
 
