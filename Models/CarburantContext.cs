@@ -15,6 +15,12 @@ public partial class CarburantContext : DbContext
     {
     }
 
+    public virtual DbSet<Commune> Communes { get; set; }
+
+    public virtual DbSet<Histo> Histos { get; set; }
+
+    public virtual DbSet<PrixCarburantCommune> PrixCarburantCommunes { get; set; }
+
     public virtual DbSet<PrixCarburantFrance> PrixCarburantFrance { get; set; }
 
     public virtual DbSet<TypesCarburant> TypesCarburants { get; set; }
@@ -25,6 +31,52 @@ public partial class CarburantContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Commune>(entity =>
+        {
+            entity.HasKey(e => e.IdCommune).HasName("Communes_pkey");
+
+            entity.Property(e => e.IdCommune)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("Id_commune");
+            entity.Property(e => e.CodePostal)
+                .HasColumnType("character varying")
+                .HasColumnName("Code_postal");
+            entity.Property(e => e.Ville).HasColumnType("character varying");
+        });
+
+        modelBuilder.Entity<Histo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("histo_pkey");
+
+            entity.ToTable("histo");
+
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
+            entity.Property(e => e.Sp95).HasColumnName("SP95");
+            entity.Property(e => e.Sp98).HasColumnName("SP98");
+        });
+
+        modelBuilder.Entity<PrixCarburantCommune>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.IdCarburant).HasColumnName("Id_carburant");
+            entity.Property(e => e.IdCommune).HasColumnName("Id_commune");
+            entity.Property(e => e.IdPrix)
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("Id_prix");
+
+            entity.HasOne(d => d.IdCarburantNavigation).WithMany()
+                .HasForeignKey(d => d.IdCarburant)
+                .HasConstraintName("fk_carburant");
+
+            entity.HasOne(d => d.IdCommuneNavigation).WithMany()
+                .HasForeignKey(d => d.IdCommune)
+                .HasConstraintName("fk_communes");
+        });
+
         modelBuilder.Entity<PrixCarburantFrance>(entity =>
         {
             entity.HasKey(e => e.IdPrix).HasName("PrixCarburantFrance_pkey");
