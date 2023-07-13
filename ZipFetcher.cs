@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Fuel
 {
@@ -18,6 +19,8 @@ namespace Fuel
 
         private CarburantContext _context = new CarburantContext();
 
+        public bool IsOK;
+
         /// <summary>
         ///     Constructeur utilisé pour récupérer un zip pour une date donnée.
         /// </summary>
@@ -26,23 +29,35 @@ namespace Fuel
         {
             this.url += zipDate.ToString("yyyyMMdd");
 
-            checkExisting(zipDate);
-            FetchZip();
-            Unzip();
+            if (checkExisting(zipDate))
+            {
+                FetchZip();
+                Unzip();
+                this.IsOK = true;
+            }
+            else
+            {
+                this.IsOK = false;
+            }
+
         }
+
 
         /// <summary>
         ///     Vérifie si il existe déjà une entrée dans la BDD pour la date donnée.
         /// </summary>
         /// <param name="zipDate"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        private void checkExisting(DateTime zipDate)
+        private bool checkExisting(DateTime zipDate)
         {
-            if (this._context.Histos.Any(t => t.Date == DateOnly.FromDateTime(zipDate)))
+            if (this._context.PrixCarburantFrance.Any(t => t.Date == DateOnly.FromDateTime(zipDate)))
             {
-                throw new InvalidOperationException("Une valeur est déjà présente à la date du "+ zipDate.ToString());
-                Environment.Exit(1);
+                Console.WriteLine(zipDate.ToString() + " : Une valeur est déjà présente.");
+                return false;
+                //throw new InvalidOperationException("Une valeur est déjà présente à la date du "+ zipDate.ToString());
+                //Environment.Exit(1);
             }
+            return true;
         }
 
         /// <summary>

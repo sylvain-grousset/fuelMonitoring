@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml;
 using Fuel.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fuel
 {
@@ -37,26 +38,40 @@ namespace Fuel
         static void Main()
         {
             DateTime dateToGet = DateTime.Now.AddDays(-1);
+            //dateToGet = new DateTime(2023, 07, 02);
+            //while (true)
+            //{
+                ZipFetcher zipFetcher = new ZipFetcher(dateToGet);
+                Results resultat = new Results();
 
-            ZipFetcher zipFetcher = new ZipFetcher(dateToGet);
-            Results resultat = new Results();
-
-            IEnumerable<Datas> grandChildData =
-            from el in StreamRootChildDoc(zipFetcher.xmlPath + zipFetcher.xmlFileName)
-            where (int)el.Attribute("cp") == 26000
-            let a = new XmlSerializer(typeof(Datas)).Deserialize(el.CreateReader())
-            select a as Datas;
-
-
-            foreach (Datas data in grandChildData)
-            {
-                foreach (Prix p in data.lesPrix)
+                if (zipFetcher.IsOK)
                 {
-                    resultat.addValues(p.Nom, Convert.ToDouble(p.Valeur, CultureInfo.InvariantCulture));
-                }
-            }
+                    IEnumerable<Datas> grandChildData =
+                        from el in StreamRootChildDoc(zipFetcher.xmlPath + zipFetcher.xmlFileName)
+                        let a = new XmlSerializer(typeof(Datas)).Deserialize(el.CreateReader())
+                        select a as Datas;
 
-            resultat.GetAverage(dateToGet);
+                    //where(int)el.Attribute("cp") == 26000
+
+
+                    foreach (Datas data in grandChildData)
+                    {
+                        foreach (Prix p in data.lesPrix)
+                        {
+                            if(dateToGet.Date == p.MiseAJour.Date)
+                            {
+                                resultat.addValues(p.Nom, Convert.ToDouble(p.Valeur, CultureInfo.InvariantCulture));
+                            }
+                            
+                        }
+                    }
+
+                    resultat.GetAverage(dateToGet);
+                    //Console.WriteLine(dateToGet.ToString() + " : OK.");
+                }
+               
+                //dateToGet = dateToGet.AddDays(-1);
+            //}
         }
     }
 }

@@ -49,34 +49,20 @@ namespace Fuel
 
         public void GetAverage(DateTime date)
         {
-
-            Histo unHisto = new Histo();
+            List<PrixCarburantFrance> lesPrix = new List<PrixCarburantFrance>();
 
             foreach(string nom in this.mesValeurs.Keys)
             {
-                switch (nom)
-                {
-                    case "Gazole":
-                        unHisto.Gazole = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
-                        break;
-
-                    case "SP95":
-                        unHisto.Sp95 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
-                        break;
-
-                    case "SP98":
-                        unHisto.Sp98 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
-                        break;
-
-                    case "E85":
-                        unHisto.E85 = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
-                        break;
-                }
+                PrixCarburantFrance unPrix = new PrixCarburantFrance();
+                TypesCarburant monCarburant = _context.TypesCarburants.Where(t => t.Type == nom).FirstOrDefault();
+                unPrix.PrixMoyen = Convert.ToDouble(this.mesValeurs[nom].Average.ToString("0.000"));
+                unPrix.Date = DateOnly.FromDateTime(date);
+                unPrix.IdCarburantNavigation = monCarburant;
+                unPrix.IdCarburant = monCarburant.Id;
+                lesPrix.Add(unPrix);
             }
 
-            unHisto.Date = DateOnly.FromDateTime(date);
-
-            _context.Histos.Add(unHisto);
+            _context.PrixCarburantFrance.AddRange(lesPrix);
             _context.SaveChanges();
         }
     }
