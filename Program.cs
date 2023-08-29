@@ -60,7 +60,7 @@ namespace Fuel
                         {
                             if(dateToGet.Date == p.MiseAJour.Date)
                             {
-                                resultat.addValues(p.Nom, Convert.ToDouble(p.Valeur, CultureInfo.InvariantCulture));
+                                resultat.addValues(p.Nom, Convert.ToDouble(p.Valeur, CultureInfo.InvariantCulture), data.cp, data.Ville);
                             }
                             
                         }

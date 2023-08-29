@@ -27,6 +27,8 @@ namespace Fuel
 
         Dictionary<string, t> mesValeurs = new Dictionary<string, t>();
 
+        HashSet<(string cp, string ville)> lesCommunes = new HashSet<(string cp, string ville)>(); 
+
         CarburantContext _context = new CarburantContext();
 
         public Results()
@@ -34,7 +36,7 @@ namespace Fuel
 
         }
 
-        public void addValues(string nom, double valeur)
+        public void addValues(string nom, double valeur, string codePostal, string ville)
         {
             if (this.mesValeurs.TryGetValue(nom, out t a))
             {
@@ -45,12 +47,16 @@ namespace Fuel
             {
                 this.mesValeurs.Add(nom, new t(valeur, 1));
             }
+
+            lesCommunes.Add((codePostal, ville));
+
         }
 
         public void GetAverage(DateTime date)
         {
             List<PrixCarburantFrance> lesPrix = new List<PrixCarburantFrance>();
 
+            //Insertion des valeurs
             foreach(string nom in this.mesValeurs.Keys)
             {
                 PrixCarburantFrance unPrix = new PrixCarburantFrance();
@@ -62,8 +68,22 @@ namespace Fuel
                 lesPrix.Add(unPrix);
             }
 
+            //Insertion des communes
+            foreach(var uneCommune in lesCommunes)
+            {
+                Commune existingCommune = _context.Communes.Where(t => t.CodePostal == uneCommune.cp).FirstOrDefault();
+
+                if(existingCommune == null)
+                {
+                    _context.Communes.Add(new Commune { CodePostal = uneCommune.cp, Ville = uneCommune.ville });
+                    _context.SaveChanges();
+                }
+            }
+
             _context.PrixCarburantFrance.AddRange(lesPrix);
             _context.SaveChanges();
+            
+
         }
     }
 

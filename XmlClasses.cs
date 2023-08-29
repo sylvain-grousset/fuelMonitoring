@@ -10,6 +10,20 @@ namespace Fuel
     [XmlRoot("pdv")]
     public class Datas
     {
+        //Attributs de pdv
+        [XmlAttribute("id")]
+        public string Id { get; set; }
+
+        [XmlAttribute("latitude")]
+        public string Latitude { get; set; }
+
+        [XmlAttribute("longitude")]
+        public string Longitude { get; set; }
+
+        [XmlAttribute("cp")]
+        public string cp { get; set; }
+
+        //Elements fils de pdv
         [XmlElement("ville")]
         public string Ville { get; set; }
 
